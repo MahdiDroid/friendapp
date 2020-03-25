@@ -2,7 +2,9 @@ package com.brain.arkadash.controller;
 
 
 import com.brain.arkadash.domain.User;
+import com.brain.arkadash.services.MapValidationErrorService;
 import com.brain.arkadash.services.UserService;
+import com.brain.arkadash.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +21,29 @@ import javax.validation.Valid;
 public class UserController {
 
     @Autowired
+    private MapValidationErrorService mapValidationErrorService;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserValidator userValidator;
+
+
 
 
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
         //validate password
+        userValidator.validate(user,result);
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null) return errorMap;
 
 
-    User newUser = userService.saveUser(user);
-    return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        User newUser = userService.saveUser(user);
+        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
 
 
     }
