@@ -1,10 +1,8 @@
-package com.brain.arkadash;
+package com.brain.arkadash.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Friend {
@@ -13,8 +11,24 @@ public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotBlank(message = "Name is required")
     private String firstName;
     private String lastName;
+
+    @OneToOne(cascade = {CascadeType.DETACH,
+                        CascadeType.MERGE,
+                        CascadeType.PERSIST,
+                        CascadeType.REFRESH})
+
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public int getId() {
         return id;

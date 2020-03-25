@@ -1,5 +1,6 @@
-package com.brain.arkadash;
+package com.brain.arkadash.repositories;
 
+import com.brain.arkadash.domain.Friend;
 import org.springframework.data.repository.CrudRepository;
 
 
